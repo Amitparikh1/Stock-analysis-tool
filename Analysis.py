@@ -20,4 +20,3 @@ def getCurrentPrice(soup):
     currentPrice = soup.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text #find the stock price from the website
     return currentPrice
 
-print(getCurrentPrice(scrapeData("AAPL")))
