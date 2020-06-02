@@ -1,7 +1,7 @@
 ##GUI
 ### Imports ###
 from tkinter import *
-from Analysis import *
+from Scraper import *
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -29,14 +29,19 @@ def showCurrentPrice():
 #     priceLabel.grid(row=2,column=1)
 #     return
 def graphHistoricPrices():
+    #how many days  
     lengthDesired = inputLength.get()
-    tickerSymbolOne = inputStockOne.get() #get input text
+    #two inputted ticker symbols 
+    tickerSymbolOne = inputStockOne.get() 
     tickerSymbolTwo = inputStockTwo.get()
+    # get price information from Scraper.py
     historic_prices_one = getHistoricPrices(scrapeData(tickerSymbolOne),int(lengthDesired))
     historic_prices_two = getHistoricPrices(scrapeData(tickerSymbolTwo),int(lengthDesired))
+    #empty arrays 
     historic_prices_combined = []
     stock_type = []
     days = []
+    # loop through and get data into new arrays 
     for i in range(0,int(lengthDesired)) : 
         historic_prices_combined.append(float(historic_prices_one[i]))
         stock_type.append(tickerSymbolOne)
@@ -44,12 +49,11 @@ def graphHistoricPrices():
         historic_prices_combined.append(float(historic_prices_two[i]))
         stock_type.append(tickerSymbolTwo)
         days.append(i+1)
-    # for price in historic_prices_one:
-    #     historic_int_prices_one.append(float(price))
-    # for price in historic_prices_two:
-    #     historic_int_prices_two.append(float(price))
+    # dictionary for the assembled data
     d = {'Day':days, 'Price':historic_prices_combined, 'stock': stock_type }
+    # create data frame using above dictionary for plotting
     compareDf = pd.DataFrame(data = d)
+    # pair plot through seaborn
     sns.pairplot(x_vars=['Day'],y_vars = ['Price'],data = compareDf, hue='stock',kind='reg')
     plt.show()
 
