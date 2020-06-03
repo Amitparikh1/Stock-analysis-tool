@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd 
+from scipy import stats
 
 root = Tk() #create root window to put widgets onto
 root.geometry("600x200")
@@ -18,6 +19,8 @@ def showCurrentPrice():
     priceLabel = Label(root,text="Current price of "+tickerSymbol+" is: $"+price)
     priceLabel.grid(row=2,column=1)
     return
+def r2(x,y):
+    return stats.pearsonr(x, y)[0] ** 2
 # def showHistoricPrices():
 #     lengthDesired = inputLengthOne.get()
 #     tickerSymbol = inputStockOne.get() #get input text
@@ -32,29 +35,26 @@ def graphHistoricPrices():
     #how many days  
     lengthDesired = inputLength.get()
     #two inputted ticker symbols 
-    tickerSymbolOne = inputStockOne.get() 
-    tickerSymbolTwo = inputStockTwo.get()
+    tickerSymbolOne = (inputStockOne.get()).upper()
+    tickerSymbolTwo = (inputStockTwo.get()).upper()
     # get price information from Scraper.py
     historic_prices_one = getHistoricPrices(scrapeData(tickerSymbolOne),int(lengthDesired))
     historic_prices_two = getHistoricPrices(scrapeData(tickerSymbolTwo),int(lengthDesired))
     #empty arrays 
-    historic_prices_combined = []
-    stock_type = []
-    days = []
+    historic_prices_one_float = []
+    historic_prices_two_float = []
+    loop_length = min(len(historic_prices_one),len(historic_prices_two))
     # loop through and get data into new arrays 
-    for i in range(0,int(lengthDesired)) : 
-        historic_prices_combined.append(float(historic_prices_one[i]))
-        stock_type.append(tickerSymbolOne)
-        days.append(i+1)
-        historic_prices_combined.append(float(historic_prices_two[i]))
-        stock_type.append(tickerSymbolTwo)
-        days.append(i+1)
+    for i in range(0,loop_length) : 
+        historic_prices_one_float.append(historic_prices_one[i])
+        historic_prices_two_float.append(historic_prices_two[i])
     # dictionary for the assembled data
-    d = {'Day':days, 'Price':historic_prices_combined, 'stock': stock_type }
+    d = {tickerSymbolOne: historic_prices_one_float,tickerSymbolTwo: historic_prices_two_float}
     # create data frame using above dictionary for plotting
     compareDf = pd.DataFrame(data = d)
     # pair plot through seaborn
-    sns.pairplot(x_vars=['Day'],y_vars = ['Price'],data = compareDf, hue='stock',kind='reg')
+    sns.jointplot(x=compareDf[tickerSymbolOne],y=compareDf[tickerSymbolTwo],kind='reg',stat_func=r2)
+    #sns.pairplot(x_vars=['Day'],y_vars = ['Price'],data = compareDf, hue='stock',kind='reg')
     plt.show()
 
 ### SETUP WIDGETS ###
