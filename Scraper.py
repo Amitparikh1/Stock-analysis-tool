@@ -28,7 +28,12 @@ def getHistoricPrices(soup,length):
     for i in range(length):
         current_row = rows[i+1]
         row_data = current_row.find_all("td")
-        historicPrices.append(row_data[1].text)
+        try:
+            price = float(row_data[1].text.replace(',',''))
+            historicPrices.append(price)
+        except ValueError:
+            print(row_data[1].text + " is not a float") 
+
     return historicPrices
 
 
