@@ -22,7 +22,7 @@ def getCurrentPrice(soup):
     currentPrice = soup.find('div',{'class': 'My(6px) Pos(r) smartphone_Mt(6px)'}).find('span').text #find the stock price from the website
     return currentPrice
 
-def getHistoricPrices(soup,length):
+def getHistoricPrices(soup,length): 
     rows = soup.find('div',{'class': 'Pb(10px) Ovx(a) W(100%)'}).find_all("tr")
     historicPrices = []
     for i in range(length):
@@ -37,7 +37,7 @@ def getHistoricPrices(soup,length):
     return historicPrices
 
 
-## main method only called when file is run directly
+## main method only called when file is run directly - for testing 
 def main():
     soup = scrapeData('aapl')
     print(getHistoricPrices(scrapeData('aapl'),5))

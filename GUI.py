@@ -9,9 +9,10 @@ import pandas as pd
 from scipy import stats
 
 root = Tk() #create root window to put widgets onto
-root.geometry("600x200")
-root.title("Stock Analyzer Tool")
+root.geometry("800x100")
+root.title("Linear Regression between Stock Prices")
 root.iconbitmap('images\stock.ico')
+
 ### FUNCTIONS ### 
 def showCurrentPrice():
     tickerSymbol = inputStockOne.get() #get input text
@@ -21,17 +22,8 @@ def showCurrentPrice():
     return
 def r2(x,y):
     return stats.pearsonr(x, y)[0] ** 2
-# def showHistoricPrices():
-#     lengthDesired = inputLengthOne.get()
-#     tickerSymbol = inputStockOne.get() #get input text
-#     historic_prices = getHistoricPrices(scrapeData(tickerSymbol),int(lengthDesired))
-#     historic_prices_string = ""
-#     for price in historic_prices:
-#         historic_prices_string += "$"+price+"  "
-#     priceLabel = Label(root,text="Stock price for the last "+lengthDesired+ " days of "+tickerSymbol+" are: "+historic_prices_string)
-#     priceLabel.grid(row=2,column=1)
-#     return
-def graphHistoricPrices():
+
+def compareHistoricPrices():
     #how many days  
     lengthDesired = inputLength.get()
     #two inputted ticker symbols 
@@ -60,10 +52,10 @@ def graphHistoricPrices():
 ### SETUP WIDGETS ###
 
 #labels
-title = Label(root,text="Stock Analyzer")
-instructions = Label(root,text="Choose two stocks and the number of days:")
+title = Label(root,text="Linear Regression between two Stock Prices")
+instructions = Label(root,text="Choose two stocks and the number of past days to analyze:")
 #buttons
-submitButton = Button(root,text="Submit",state=NORMAL,bg="green",fg="white",command = graphHistoricPrices)
+submitButton = Button(root,text="Submit",state=NORMAL,bg="green",fg="white",command = compareHistoricPrices)
 ##input boxes
 #stock 1 
 inputStockOne = Entry(root) # use .get() to get the text from the input box
